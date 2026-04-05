@@ -113,6 +113,41 @@ export const api = {
   // Enterprise
   getAuditTrail: (limit = 50) =>
     fetchAPI<AuditEntry[]>(`/api/enterprise/audit?limit=${limit}`),
+
+  // ── MongoDB Data ──
+  dbGetCompanies: (sector?: string) =>
+    fetchAPI<{ companies: DBCompany[] }>(`/api/db/companies${sector ? `?sector=${sector}` : ""}`),
+  dbGetWatchlist: (userId: string) =>
+    fetchAPI<{ user_id: string; symbols: string[] }>(`/api/db/watchlist/${userId}`),
+  dbUpdateWatchlist: (userId: string, symbols: string[]) =>
+    fetchAPI<{ status: string }>(`/api/db/watchlist/${userId}`, {
+      method: "POST",
+      body: JSON.stringify({ symbols }),
+    }),
+  dbGetPortfolio: (userId: string) =>
+    fetchAPI<{ user_id: string; positions: DBPosition[] }>(`/api/db/portfolio/${userId}`),
+  dbAddPosition: (userId: string, symbol: string, quantity: number, entryPrice: number) =>
+    fetchAPI<{ status: string }>(`/api/db/portfolio/${userId}`, {
+      method: "POST",
+      body: JSON.stringify({ symbol, quantity, entry_price: entryPrice }),
+    }),
+  dbRemovePosition: (userId: string, symbol: string) =>
+    fetchAPI<{ status: string }>(`/api/db/portfolio/${userId}/${symbol}`, { method: "DELETE" }),
+  dbGetNewsSentiment: (symbol: string) =>
+    fetchAPI<{ symbol: string; articles: DBNewsSentiment[] }>(`/api/db/news/${symbol}`),
+  dbGetPreferences: (userId: string) =>
+    fetchAPI<DBPreferences>(`/api/db/preferences/${userId}`),
+  dbUpdatePreferences: (userId: string, prefs: Partial<DBPreferences>) =>
+    fetchAPI<{ status: string }>(`/api/db/preferences/${userId}`, {
+      method: "POST",
+      body: JSON.stringify(prefs),
+    }),
+
+  // Sentiment Demo
+  getSentimentDemo: (symbol?: string) =>
+    fetchAPI<{ results?: unknown[]; symbol?: string; analyses?: unknown[] }>(
+      `/api/sentiment/demo${symbol ? `?symbol=${symbol}` : ""}`
+    ),
 };
 
 export interface MonteCarloResult {
@@ -245,4 +280,36 @@ export interface AuditEntry {
   action: string;
   user_id: string;
   details: Record<string, unknown>;
+}
+
+// MongoDB types
+export interface DBCompany {
+  symbol: string;
+  name: string;
+  sector: string;
+  yahoo: string;
+}
+
+export interface DBPosition {
+  user_id: string;
+  symbol: string;
+  quantity: number;
+  entry_price: number;
+  entry_date: string;
+}
+
+export interface DBNewsSentiment {
+  symbol: string;
+  title: string;
+  sentiment: string;
+  confidence: number;
+  source: string;
+}
+
+export interface DBPreferences {
+  user_id: string;
+  theme: string;
+  language: string;
+  notifications: boolean;
+  daily_report: boolean;
 }

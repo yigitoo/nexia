@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
-import { Mail, FileText, Download, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Mail, FileText, Download, Loader2, CheckCircle, AlertCircle, Shield, Key, Clock } from "lucide-react";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -10,6 +10,10 @@ export function SettingsView() {
   const { user, logout } = useAuth();
   const [emailStatus, setEmailStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [schedulerOn, setSchedulerOn] = useState(false);
+  const [twoFAEnabled, setTwoFAEnabled] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [twoFAStatus, setTwoFAStatus] = useState<"idle" | "verifying" | "enabled" | "error">("idle");
+  const [sessionDays, setSessionDays] = useState(7);
 
   async function sendTestEmail() {
     setEmailStatus("sending");
@@ -133,10 +137,111 @@ export function SettingsView() {
         </div>
       </Section>
 
+      {/* Security */}
+      <Section title="Güvenlik">
+        <div className="px-4 py-3 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-emerald-400" />
+              <div>
+                <p className="text-[12px] font-medium">İki Faktörlü Doğrulama (2FA)</p>
+                <p className="text-[11px] text-muted-foreground">TOTP tabanlı güvenlik kodu</p>
+              </div>
+            </div>
+            <button
+              onClick={async () => {
+                if (twoFAEnabled) {
+                  try {
+                    await fetch(`${API}/api/auth/2fa/disable`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ email: user?.email }),
+                    });
+                    setTwoFAEnabled(false);
+                  } catch {}
+                } else {
+                  try {
+                    await fetch(`${API}/api/auth/2fa/enable`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ email: user?.email }),
+                    });
+                    setTwoFAEnabled(true);
+                    setTwoFAStatus("idle");
+                  } catch {}
+                }
+              }}
+              className={`h-7 px-3 rounded-full text-[11px] font-medium transition-colors ${
+                twoFAEnabled
+                  ? "bg-emerald-600 text-white"
+                  : "bg-muted/30 text-muted-foreground border border-border/50"
+              }`}
+            >
+              {twoFAEnabled ? "Aktif" : "Pasif"}
+            </button>
+          </div>
+
+          {twoFAEnabled && (
+            <div className="flex items-center gap-2 pt-2 border-t border-border/30">
+              <Key className="w-3.5 h-3.5 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="6 haneli doğrulama kodu"
+                value={otpCode}
+                onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                className="h-8 px-3 rounded-md border border-border/50 bg-muted/30 text-[12px] font-mono w-36 text-center tracking-widest"
+              />
+              <button
+                onClick={async () => {
+                  setTwoFAStatus("verifying");
+                  try {
+                    const res = await fetch(`${API}/api/auth/2fa/verify`, {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ email: user?.email, code: otpCode }),
+                    });
+                    setTwoFAStatus(res.ok ? "enabled" : "error");
+                  } catch { setTwoFAStatus("error"); }
+                  setOtpCode("");
+                  setTimeout(() => setTwoFAStatus("idle"), 3000);
+                }}
+                disabled={otpCode.length !== 6 || twoFAStatus === "verifying"}
+                className="h-8 px-3 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-medium disabled:opacity-40 transition-colors"
+              >
+                {twoFAStatus === "verifying" ? <Loader2 className="w-3 h-3 animate-spin" /> : "Doğrula"}
+              </button>
+              {twoFAStatus === "enabled" && <CheckCircle className="w-4 h-4 text-emerald-400" />}
+              {twoFAStatus === "error" && <AlertCircle className="w-4 h-4 text-red-400" />}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between pt-2 border-t border-border/30">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+              <div>
+                <p className="text-[12px] font-medium">Oturum Süresi</p>
+                <p className="text-[11px] text-muted-foreground">Bu süre sonunda tekrar giriş gerekir</p>
+              </div>
+            </div>
+            <select
+              value={sessionDays}
+              onChange={(e) => setSessionDays(Number(e.target.value))}
+              className="h-7 px-2 rounded-md border border-border/50 bg-muted/30 text-[11px] text-foreground"
+            >
+              <option value={1}>1 gün</option>
+              <option value={3}>3 gün</option>
+              <option value={7}>7 gün</option>
+              <option value={14}>14 gün</option>
+              <option value={30}>30 gün</option>
+            </select>
+          </div>
+        </div>
+      </Section>
+
       {/* API */}
       <Section title="API Bağlantısı">
-        <Row label="Backend" value="localhost:8000" mono />
-        <Row label="Frontend" value="localhost:3000" mono />
+        <Row label="Backend" value={API} mono />
+        <Row label="Durum" value="Bağlı" />
       </Section>
 
       <button
