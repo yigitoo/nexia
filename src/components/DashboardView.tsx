@@ -21,12 +21,11 @@ const WATCHLIST_SYMBOLS = [
   "THYAO.IS", "GARAN.IS", "AKBNK.IS", "EREGL.IS", "BIMAS.IS", "ASELS.IS",
 ];
 
-const MARKET_TICKER = [
-  { name: "BIST 100", value: "9,842", change: "+1.24" },
-  { name: "USD/TRY", value: "38.42", change: "+0.18" },
-  { name: "EUR/TRY", value: "41.85", change: "-0.06" },
-  { name: "Altın (gr)", value: "3,245", change: "+0.52" },
-];
+interface MarketTick {
+  name: string;
+  value: string;
+  change: string;
+}
 
 interface WatchlistItem {
   symbol: string;
@@ -45,6 +44,64 @@ export function DashboardView() {
   const [searchQuery, setSearchQuery] = useState("");
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
   const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [marketTicker, setMarketTicker] = useState<MarketTick[]>([
+    { name: "BIST 100", value: "—", change: "0" },
+    { name: "USD/TRY", value: "—", change: "0" },
+    { name: "EUR/TRY", value: "—", change: "0" },
+    { name: "Altın (gr)", value: "—", change: "0" },
+  ]);
+
+  // Fetch live market ticker data
+  useEffect(() => {
+    async function fetchMarketTicker() {
+      const results: MarketTick[] = [];
+      try {
+        // BIST 100 (XU100.IS)
+        const bist = await api.getStock("XU100.IS").catch(() => null);
+        results.push({
+          name: "BIST 100",
+          value: bist ? Number(bist.price).toLocaleString("tr-TR") : "—",
+          change: bist ? (bist.change_percent >= 0 ? `+${bist.change_percent.toFixed(2)}` : bist.change_percent.toFixed(2)) : "0",
+        });
+      } catch { results.push({ name: "BIST 100", value: "—", change: "0" }); }
+
+      try {
+        // USD/TRY
+        const usd = await api.getForexRate("USD", "TRY").catch(() => null);
+        results.push({
+          name: "USD/TRY",
+          value: usd ? usd.rate.toFixed(2) : "—",
+          change: "+0.00", // forex endpoint doesn't return change
+        });
+      } catch { results.push({ name: "USD/TRY", value: "—", change: "0" }); }
+
+      try {
+        // EUR/TRY
+        const eur = await api.getForexRate("EUR", "TRY").catch(() => null);
+        results.push({
+          name: "EUR/TRY",
+          value: eur ? eur.rate.toFixed(2) : "—",
+          change: "+0.00",
+        });
+      } catch { results.push({ name: "EUR/TRY", value: "—", change: "0" }); }
+
+      try {
+        // Altın - GC=F (Gold Futures) veya GOLDTRY=X
+        const gold = await api.getStock("GC=F").catch(() => null);
+        results.push({
+          name: "Altın (oz)",
+          value: gold ? Number(gold.price).toLocaleString("tr-TR") : "—",
+          change: gold ? (gold.change_percent >= 0 ? `+${gold.change_percent.toFixed(2)}` : gold.change_percent.toFixed(2)) : "0",
+        });
+      } catch { results.push({ name: "Altın", value: "—", change: "0" }); }
+
+      if (results.length > 0) setMarketTicker(results);
+    }
+
+    fetchMarketTicker();
+    const interval = setInterval(fetchMarketTicker, 60000); // Her 60 saniyede güncelle
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     api.health().then(() => setApiOnline(true)).catch(() => setApiOnline(false));
@@ -111,13 +168,13 @@ export function DashboardView() {
           </div>
         </div>
 
-        {/* Market ticker */}
+        {/* Market ticker — anlık veriler */}
         <div className="flex items-center gap-6 h-8 px-6 border-t border-border/30 bg-muted/20 text-[11px]">
-          {MARKET_TICKER.map((m) => (
+          {marketTicker.map((m) => (
             <span key={m.name} className="flex items-center gap-1.5 text-muted-foreground">
               <span>{m.name}</span>
               <span className="font-mono text-foreground">{m.value}</span>
-              <span className={`font-mono ${m.change.startsWith("+") ? "text-emerald-400" : "text-red-400"}`}>{m.change}%</span>
+              <span className={`font-mono ${m.change.startsWith("+") ? "text-emerald-400" : m.change.startsWith("-") ? "text-red-400" : "text-muted-foreground"}`}>{m.change}%</span>
             </span>
           ))}
         </div>
