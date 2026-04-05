@@ -86,14 +86,24 @@ export function DashboardView() {
       } catch { results.push({ name: "EUR/TRY", value: "—", change: "0" }); }
 
       try {
-        // Altın - GC=F (Gold Futures) veya GOLDTRY=X
-        const gold = await api.getStock("GC=F").catch(() => null);
-        results.push({
-          name: "Altın (oz)",
-          value: gold ? Number(gold.price).toLocaleString("tr-TR") : "—",
-          change: gold ? (gold.change_percent >= 0 ? `+${gold.change_percent.toFixed(2)}` : gold.change_percent.toFixed(2)) : "0",
-        });
-      } catch { results.push({ name: "Altın", value: "—", change: "0" }); }
+        // Altın gram TL — GLD ETF (USD) → ons fiyat → gram TL
+        const [gld, usdRate] = await Promise.all([
+          api.getStock("GLD").catch(() => null),
+          api.getForexRate("USD", "TRY").catch(() => null),
+        ]);
+        if (gld && usdRate) {
+          // GLD ETF ≈ 1/10 ons altın fiyatı, 1 ons = 31.1035 gram
+          const onsUsd = gld.price * 10;
+          const gramTry = (onsUsd * usdRate.rate) / 31.1035;
+          results.push({
+            name: "Altın (gr)",
+            value: `₺${Math.round(gramTry).toLocaleString("tr-TR")}`,
+            change: gld.change_percent >= 0 ? `+${gld.change_percent.toFixed(2)}` : gld.change_percent.toFixed(2),
+          });
+        } else {
+          results.push({ name: "Altın (gr)", value: "—", change: "0" });
+        }
+      } catch { results.push({ name: "Altın (gr)", value: "—", change: "0" }); }
 
       if (results.length > 0) setMarketTicker(results);
     }
