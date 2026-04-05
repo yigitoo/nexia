@@ -22,8 +22,14 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-background">
-        <div className="w-7 h-7 rounded-md bg-emerald-600 animate-pulse" />
+      <div className="h-screen flex flex-col items-center justify-center bg-background gap-4">
+        <div className="relative">
+          <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur-xl opacity-30 animate-pulse" />
+          <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-400 flex items-center justify-center text-white font-black text-xl shadow-2xl shadow-emerald-500/30 animate-pulse">
+            NX
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground/50 animate-pulse">Yükleniyor...</p>
       </div>
     );
   }
