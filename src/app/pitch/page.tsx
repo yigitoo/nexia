@@ -37,7 +37,7 @@ import {
    20 slides · dark theme · hover glow
    ════════════════════════════════════════ */
 
-const TOTAL_SLIDES = 21;
+const TOTAL_SLIDES = 22;
 
 // Sunucu notları — her slide için
 const speakerNotes: Record<number, string> = {
@@ -62,6 +62,7 @@ const speakerNotes: Record<number, string> = {
   18: "Üç exit senaryomuz var. Öncelikli olarak stratejik satın alma — aracı kurum veya fintech tarafından. Alternatif olarak venture backed growth ya da kârlı bağımsız şirket modeli.",
   19: "Finansal güvenlik bir lüks değil, temel haktır. Nexia bu hakkı 8.6 milyon insanın cebine taşıyor.",
   20: "Sunumumuzu dinlediğiniz için teşekkür ederiz. Sorularınızı almaktan mutluluk duyarız.",
+  21: "Nexia tanıtım videosu — ürünümüzün çalışan halini izliyorsunuz.",
 };
 
 export default function PitchPage() {
@@ -1478,6 +1479,27 @@ function SlideClosing({}: SlideProps) {
   );
 }
 
+// ─── 21: Video ───
+function SlideVideo({}: SlideProps) {
+  return (
+    <div className="flex flex-col items-center justify-center w-full h-full gap-4">
+      <div className="relative w-[clamp(70vw,80vw,1200px)] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-gray-200">
+        <video
+          src="/video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-contain bg-black"
+        />
+      </div>
+      <p className="text-[clamp(10px,1.1vw,14px)] text-gray-400 font-medium">
+        Nexia &mdash; Yapay Zek&#226; Destekli Finansal G&#252;venlik Asistan&#305;
+      </p>
+    </div>
+  );
+}
+
 /* ═══════════════════════════════════
    SLIDES ARRAY
    ═══════════════════════════════════ */
@@ -1503,4 +1525,5 @@ const slides: ((props: SlideProps) => React.ReactNode)[] = [
   SlideExitStrategy,    // 18 — Exit Strategy
   SlideTeam,            // 19 — Takım
   SlideClosing,         // 20 — Kapanış + Teşekkürler
+  SlideVideo,           // 21 — Video
 ];
