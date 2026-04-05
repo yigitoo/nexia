@@ -153,7 +153,7 @@ export default function PitchPage() {
   return (
     <div
       ref={containerRef}
-      className="relative h-screen w-screen overflow-hidden select-none bg-[#09090b]"
+      className="relative h-screen w-screen overflow-hidden select-none bg-[#fafafa]"
       onMouseMove={handleMouseMove}
     >
       {/* Ambient multi-glow following mouse */}
@@ -161,7 +161,7 @@ export default function PitchPage() {
         className="pointer-events-none fixed inset-0 z-0 transition-all duration-500"
         style={{
           background: `
-            radial-gradient(900px circle at ${mousePos.x}px ${mousePos.y}px, rgba(16,185,129,0.07), transparent 50%),
+            radial-gradient(900px circle at ${mousePos.x}px ${mousePos.y}px, rgba(16,185,129,0.06), transparent 50%),
             radial-gradient(600px circle at ${mousePos.x + 200}px ${mousePos.y - 100}px, rgba(45,212,191,0.04), transparent 50%),
             radial-gradient(400px circle at ${mousePos.x - 150}px ${mousePos.y + 80}px, rgba(99,102,241,0.03), transparent 50%)
           `,
@@ -173,7 +173,7 @@ export default function PitchPage() {
         {[...Array(6)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 rounded-full bg-emerald-400/20 animate-float"
+            className="absolute w-1 h-1 rounded-full bg-emerald-500/15 animate-float"
             style={{
               left: `${15 + i * 15}%`,
               top: `${10 + i * 12}%`,
@@ -204,25 +204,25 @@ export default function PitchPage() {
 
       {/* Speaker notes panel */}
       <div className={`fixed bottom-0 left-0 right-0 z-40 transition-all duration-500 ${showNotes ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}>
-        <div className="mx-[3vw] mb-[6vh] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-2xl shadow-black/50">
+        <div className="mx-[3vw] mb-[6vh] bg-white/90 backdrop-blur-xl border border-gray-200 rounded-2xl p-5 shadow-2xl shadow-gray-300/50">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] text-emerald-400 font-semibold uppercase tracking-wider">Sunucu Notları</span>
-            <button onClick={() => setShowNotes(false)} className="text-[10px] text-white/30 hover:text-white/60 transition-colors px-2 py-0.5 rounded border border-white/10">
+            <button onClick={() => setShowNotes(false)} className="text-[10px] text-gray-400 hover:text-gray-600 transition-colors px-2 py-0.5 rounded border border-gray-200">
               ESC / N
             </button>
           </div>
-          <p className="text-[clamp(13px,1.3vw,17px)] text-white/70 leading-relaxed">
+          <p className="text-[clamp(13px,1.3vw,17px)] text-gray-700 leading-relaxed">
             {speakerNotes[current] || "Bu slayt için not bulunmuyor."}
           </p>
         </div>
       </div>
 
       {/* Bottom navigation */}
-      <div className="fixed bottom-[2vh] left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-white/[0.03] backdrop-blur-md border border-white/[0.06] rounded-full px-4 py-2">
+      <div className="fixed bottom-[2vh] left-1/2 -translate-x-1/2 z-50 flex items-center gap-4 bg-black/[0.03] backdrop-blur-md border border-black/[0.08] rounded-full px-4 py-2">
         <button
           onClick={() => go(-1)}
           disabled={current === 0}
-          className="p-1.5 rounded-full hover:bg-white/10 disabled:opacity-20 transition-all hover:scale-110 active:scale-95"
+          className="p-1.5 rounded-full hover:bg-gray-100 disabled:opacity-20 transition-all hover:scale-110 active:scale-95"
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
@@ -235,7 +235,7 @@ export default function PitchPage() {
               className={`transition-all duration-500 rounded-full ${
                 i === current
                   ? "w-6 h-1.5 bg-gradient-to-r from-emerald-400 to-teal-400 shadow-lg shadow-emerald-500/30"
-                  : "w-1.5 h-1.5 bg-white/15 hover:bg-white/30"
+                  : "w-1.5 h-1.5 bg-gray-300 hover:bg-gray-400"
               }`}
             />
           ))}
@@ -244,7 +244,7 @@ export default function PitchPage() {
         <button
           onClick={() => go(1)}
           disabled={current === TOTAL_SLIDES - 1}
-          className="p-1.5 rounded-full hover:bg-white/10 disabled:opacity-20 transition-all hover:scale-110 active:scale-95"
+          className="p-1.5 rounded-full hover:bg-gray-100 disabled:opacity-20 transition-all hover:scale-110 active:scale-95"
         >
           <ChevronRight className="w-4 h-4" />
         </button>
@@ -252,12 +252,12 @@ export default function PitchPage() {
 
       {/* Top bar */}
       <div className="fixed top-[2vh] right-[2vw] z-50 flex items-center gap-3">
-        <span className="text-[10px] text-white/20 font-mono">
+        <span className="text-[10px] text-gray-300 font-mono">
           {String(current + 1).padStart(2, "0")}/{TOTAL_SLIDES}
         </span>
         <button
           onClick={toggleFullscreen}
-          className="p-1.5 rounded-lg bg-white/[0.03] border border-white/[0.06] hover:bg-white/10 transition-all hover:scale-110"
+          className="p-1.5 rounded-lg bg-black/[0.03] border border-black/[0.08] hover:bg-gray-100 transition-all hover:scale-110"
           title="Tam ekran (F)"
         >
           {isFullscreen ? <Minimize className="w-3.5 h-3.5" /> : <Maximize className="w-3.5 h-3.5" />}
@@ -271,7 +271,7 @@ export default function PitchPage() {
           className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all duration-300 text-[11px] font-medium ${
             showNotes
               ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-              : "bg-white/[0.03] border-white/[0.06] text-white/30 hover:text-white/60 hover:bg-white/[0.06]"
+              : "bg-black/[0.03] border-black/[0.08] text-gray-400 hover:text-gray-600 hover:bg-gray-100"
           }`}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -279,12 +279,12 @@ export default function PitchPage() {
           </svg>
           <span className="hidden group-hover:inline">Notlar</span>
         </button>
-        <div className="hidden md:flex items-center gap-2 text-[9px] text-white/15 font-mono">
-          <span className="px-1.5 py-0.5 rounded border border-white/10">←→</span>
+        <div className="hidden md:flex items-center gap-2 text-[9px] text-gray-300 font-mono">
+          <span className="px-1.5 py-0.5 rounded border border-gray-200">←→</span>
           <span>gezin</span>
-          <span className="px-1.5 py-0.5 rounded border border-white/10 ml-1">F</span>
+          <span className="px-1.5 py-0.5 rounded border border-gray-200 ml-1">F</span>
           <span>tam ekran</span>
-          <span className="px-1.5 py-0.5 rounded border border-white/10 ml-1">N</span>
+          <span className="px-1.5 py-0.5 rounded border border-gray-200 ml-1">N</span>
           <span>notlar</span>
         </div>
       </div>
@@ -316,8 +316,8 @@ export default function PitchPage() {
         .animate-auto-shimmer { animation: auto-shimmer 2s ease-in-out forwards; }
 
         @keyframes auto-border-glow {
-          0%, 100% { border-color: rgba(255,255,255,0.06); }
-          50% { border-color: rgba(16,185,129,0.35); }
+          0%, 100% { border-color: rgba(0,0,0,0.08); }
+          50% { border-color: rgba(16,185,129,0.4); }
         }
         .animate-auto-glow { animation: auto-border-glow 3s ease-in-out 1.5s 2; }
       `}</style>
@@ -358,8 +358,8 @@ function GlowCard({
 
   return (
     <div
-      className={`group relative bg-white/[0.02] backdrop-blur-sm border border-white/[0.06] rounded-2xl p-[clamp(1rem,2vw,1.5rem)]
-      transition-all duration-500 hover:bg-white/[0.05] hover:shadow-2xl hover:-translate-y-1.5 hover:scale-[1.02]
+      className={`group relative bg-black/[0.02] backdrop-blur-sm border border-black/[0.08] rounded-2xl p-[clamp(1rem,2vw,1.5rem)]
+      transition-all duration-500 hover:bg-black/[0.04] hover:shadow-2xl hover:-translate-y-1.5 hover:scale-[1.02]
       before:absolute before:inset-0 before:rounded-2xl before:opacity-0 before:transition-opacity before:duration-500
       hover:before:opacity-100
       ${autoGlow ? "animate-auto-glow" : ""}
@@ -378,7 +378,7 @@ function GlowCard({
       <div className={`absolute inset-0 rounded-2xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${autoGlow ? "animate-auto-shimmer" : ""}`}
         style={autoGlow ? { animationDelay: `${delay + 800}ms` } : undefined}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-black/[0.03] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
       </div>
       <div className="relative z-10">{children}</div>
     </div>
@@ -415,7 +415,7 @@ function StatCard({ value, label, color = "emerald" }: { value: string; label: s
       <div className={`text-[clamp(1.5rem,3.5vw,2.5rem)] font-extrabold mb-1 bg-gradient-to-r ${gradients[color] || gradients.emerald} bg-clip-text text-transparent`}>
         {value}
       </div>
-      <div className="text-[clamp(9px,1vw,13px)] text-white/40">{label}</div>
+      <div className="text-[clamp(9px,1vw,13px)] text-gray-500">{label}</div>
     </GlowCard>
   );
 }
@@ -424,10 +424,10 @@ function SectionTitle({ tag, title, subtitle }: { tag: string; title: string; su
   return (
     <div className="text-center mb-[clamp(2rem,4vh,3rem)]">
       <Tag>{tag}</Tag>
-      <h2 className="text-[clamp(2rem,4.5vw,3.5rem)] font-extrabold mt-4 tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent leading-tight">
+      <h2 className="text-[clamp(2rem,4.5vw,3.5rem)] font-extrabold mt-4 tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent leading-tight">
         {title}
       </h2>
-      {subtitle && <p className="text-[clamp(13px,1.5vw,18px)] text-white/35 mt-3 max-w-3xl mx-auto">{subtitle}</p>}
+      {subtitle && <p className="text-[clamp(13px,1.5vw,18px)] text-gray-400 mt-3 max-w-3xl mx-auto">{subtitle}</p>}
     </div>
   );
 }
@@ -452,17 +452,17 @@ function SlideCover({}: SlideProps) {
         NEXIA
       </h1>
 
-      <p className="text-[clamp(1rem,2.2vw,1.6rem)] text-white/40 font-light tracking-wide italic">
+      <p className="text-[clamp(1rem,2.2vw,1.6rem)] text-gray-500 font-light tracking-wide italic">
         &ldquo;7&apos;den 70&apos;e, Herkes İçin Finansal Güvenlik&rdquo;
       </p>
 
       <div className="flex items-center gap-3 mt-2">
         <Tag>IGNITE&apos;26</Tag>
-        <span className="text-white/20">|</span>
-        <span className="text-[clamp(10px,1.1vw,14px)] text-white/30">Barış &middot; Ömer &middot; Yiğit</span>
+        <span className="text-gray-300">|</span>
+        <span className="text-[clamp(10px,1.1vw,14px)] text-gray-400">Barış &middot; Ömer &middot; Yiğit</span>
       </div>
 
-      <div className="mt-[3vh] flex items-center gap-2 text-white/20 text-[clamp(10px,1vw,13px)] animate-bounce">
+      <div className="mt-[3vh] flex items-center gap-2 text-gray-300 text-[clamp(10px,1vw,13px)] animate-bounce">
         <span>Başlamak için</span>
         <ChevronRight className="w-4 h-4" />
       </div>
@@ -491,12 +491,12 @@ function SlideProblem({}: SlideProps) {
           <GlowCard key={i} glowColor={p.color} className="text-center" delay={i * 150} autoGlow={i === 2}>
             <p.icon className={`w-[clamp(1.2rem,2.5vw,2rem)] h-[clamp(1.2rem,2.5vw,2rem)] mx-auto mb-2 ${p.color === "red" ? "text-red-400" : "text-amber-400"}`} />
             <div className={`text-[clamp(1.3rem,3vw,2.2rem)] font-extrabold mb-0.5 ${p.color === "red" ? "text-red-400" : "text-amber-400"}`}>{p.stat}</div>
-            <div className="text-[clamp(8px,0.9vw,12px)] text-white/35">{p.label}</div>
+            <div className="text-[clamp(8px,0.9vw,12px)] text-gray-400">{p.label}</div>
           </GlowCard>
         ))}
       </div>
       <GlowCard glowColor="red" className="text-center">
-        <p className="text-[clamp(11px,1.2vw,15px)] text-white/50">
+        <p className="text-[clamp(11px,1.2vw,15px)] text-gray-500">
           Mevcut çözümler (Midas, Fintables): <span className="text-red-400 font-semibold">Sadece al-sat. Risk analizi yok.</span>
         </p>
       </GlowCard>
@@ -520,12 +520,12 @@ function SlideSolution({}: SlideProps) {
         {features.map((f, i) => (
           <GlowCard key={i} glowColor={["emerald","teal","blue","violet"][i]} delay={i * 200} autoGlow={i === 0}>
             <div className="flex items-start gap-[clamp(0.5rem,1.5vw,1rem)]">
-              <div className={`p-[clamp(0.5rem,1vw,0.75rem)] rounded-xl bg-white/5 ${f.color} shrink-0`}>
+              <div className={`p-[clamp(0.5rem,1vw,0.75rem)] rounded-xl bg-gray-100 ${f.color} shrink-0`}>
                 <f.icon className="w-[clamp(1rem,2vw,1.5rem)] h-[clamp(1rem,2vw,1.5rem)]" />
               </div>
               <div>
                 <h3 className="text-[clamp(12px,1.3vw,16px)] font-bold mb-1">{f.title}</h3>
-                <p className="text-[clamp(10px,1vw,13px)] text-white/45">{f.desc}</p>
+                <p className="text-[clamp(10px,1vw,13px)] text-gray-500">{f.desc}</p>
               </div>
             </div>
           </GlowCard>
@@ -548,7 +548,7 @@ function SlideTamSamSom({}: SlideProps) {
           </div>
           <div className="text-[clamp(9px,1vw,12px)] text-emerald-400/60 font-bold tracking-[0.2em] uppercase mb-2">TAM — Global Pazar</div>
           <div className="text-[clamp(2.5rem,5vw,4rem)] font-black text-emerald-400 leading-none mb-2">300M+</div>
-          <div className="text-[clamp(11px,1.2vw,15px)] text-white/40 leading-relaxed">Gelişmekte olan ülkelerdeki<br />bireysel yatırımcı sayısı</div>
+          <div className="text-[clamp(11px,1.2vw,15px)] text-gray-500 leading-relaxed">Gelişmekte olan ülkelerdeki<br />bireysel yatırımcı sayısı</div>
           <div className="mt-3 text-[clamp(9px,0.9vw,12px)] text-emerald-400/40 font-medium">Hindistan, Brezilya, Meksika, MENA...</div>
         </GlowCard>
 
@@ -559,7 +559,7 @@ function SlideTamSamSom({}: SlideProps) {
           </div>
           <div className="text-[clamp(9px,1vw,12px)] text-teal-400/60 font-bold tracking-[0.2em] uppercase mb-2">SAM — Türkiye</div>
           <div className="text-[clamp(2.5rem,5vw,4rem)] font-black text-teal-400 leading-none mb-2">8.6M</div>
-          <div className="text-[clamp(11px,1.2vw,15px)] text-white/40 leading-relaxed">Borsa İstanbul&apos;da işlem yapan<br />aktif bireysel yatırımcı</div>
+          <div className="text-[clamp(11px,1.2vw,15px)] text-gray-500 leading-relaxed">Borsa İstanbul&apos;da işlem yapan<br />aktif bireysel yatırımcı</div>
           <div className="mt-3 text-[clamp(9px,0.9vw,12px)] text-teal-400/40 font-medium">₺2.1 trilyon toplam portföy değeri</div>
         </GlowCard>
 
@@ -570,7 +570,7 @@ function SlideTamSamSom({}: SlideProps) {
           </div>
           <div className="text-[clamp(9px,1vw,12px)] text-blue-400/60 font-bold tracking-[0.2em] uppercase mb-2">SOM — Yıl 1 Hedef</div>
           <div className="text-[clamp(2.5rem,5vw,4rem)] font-black text-blue-400 leading-none mb-2">50K</div>
-          <div className="text-[clamp(11px,1.2vw,15px)] text-white/40 leading-relaxed">İlk yıl sonunda ulaşılacak<br />aktif kullanıcı hedefi</div>
+          <div className="text-[clamp(11px,1.2vw,15px)] text-gray-500 leading-relaxed">İlk yıl sonunda ulaşılacak<br />aktif kullanıcı hedefi</div>
           <div className="mt-3 text-[clamp(9px,0.9vw,12px)] text-blue-400/40 font-medium">%8 Pro dönüşüm → 4K ücretli abone</div>
         </GlowCard>
       </div>
@@ -597,11 +597,11 @@ function SlidePersonas({}: SlideProps) {
               <Tag color={p.color}>{p.tag}</Tag>
             </div>
             <h4 className="font-bold text-[clamp(12px,1.2vw,15px)]">{p.name}, {p.age}</h4>
-            <p className="text-[clamp(9px,0.8vw,11px)] text-white/35 mb-3">{p.role}</p>
+            <p className="text-[clamp(9px,0.8vw,11px)] text-gray-400 mb-3">{p.role}</p>
             <div className="space-y-2">
               <div className="flex items-start gap-1.5">
                 <X className="w-3 h-3 text-red-400 mt-0.5 shrink-0" />
-                <span className="text-[clamp(9px,0.9vw,12px)] text-white/40">{p.pain}</span>
+                <span className="text-[clamp(9px,0.9vw,12px)] text-gray-500">{p.pain}</span>
               </div>
               <div className="flex items-start gap-1.5">
                 <Check className="w-3 h-3 text-emerald-400 mt-0.5 shrink-0" />
@@ -633,11 +633,11 @@ function SlideUseCases({}: SlideProps) {
             <div className="flex items-center gap-2 mb-2">
               <Tag color={c.color}>{c.persona}</Tag>
             </div>
-            <p className="text-[clamp(10px,1.1vw,14px)] text-white/60 mb-3 font-medium">{c.scenario}</p>
+            <p className="text-[clamp(10px,1.1vw,14px)] text-gray-600 mb-3 font-medium">{c.scenario}</p>
             <div className="space-y-1.5">
               <div className="flex items-start gap-2 text-[clamp(9px,1vw,13px)]">
                 <X className="w-3.5 h-3.5 text-red-400 mt-0.5 shrink-0" />
-                <span className="text-white/35">{c.without}</span>
+                <span className="text-gray-400">{c.without}</span>
               </div>
               <div className="flex items-start gap-2 text-[clamp(9px,1vw,13px)]">
                 <Check className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" />
@@ -669,8 +669,8 @@ function SlideProduct({}: SlideProps) {
         {features.map((f, i) => (
           <GlowCard key={i} glowColor={i % 2 === 0 ? "emerald" : "teal"}>
             <div className="text-[clamp(1.3rem,2.8vw,2.2rem)] font-extrabold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-1">{f.value}</div>
-            <div className="text-[clamp(10px,1.1vw,14px)] font-semibold text-white/75 mb-0.5">{f.label}</div>
-            <div className="text-[clamp(8px,0.9vw,12px)] text-white/35">{f.desc}</div>
+            <div className="text-[clamp(10px,1.1vw,14px)] font-semibold text-gray-700 mb-0.5">{f.label}</div>
+            <div className="text-[clamp(8px,0.9vw,12px)] text-gray-400">{f.desc}</div>
           </GlowCard>
         ))}
       </div>
@@ -699,7 +699,7 @@ function SlideArchitecture({}: SlideProps) {
             <h4 className="font-bold text-[clamp(11px,1.1vw,14px)] mb-2">{l.title}</h4>
             <ul className="space-y-1">
               {l.items.map((item, j) => (
-                <li key={j} className="text-[clamp(8px,0.9vw,12px)] text-white/40 flex items-center gap-1.5">
+                <li key={j} className="text-[clamp(8px,0.9vw,12px)] text-gray-500 flex items-center gap-1.5">
                   <div className={`w-1 h-1 rounded-full shrink-0 ${l.color.replace("text-", "bg-")}`} />
                   {item}
                 </li>
@@ -731,7 +731,7 @@ function SlideCompetitor({}: SlideProps) {
     if (val === "yes") return <Check className="w-3.5 h-3.5 text-emerald-400 mx-auto" />;
     if (val === "no") return <X className="w-3.5 h-3.5 text-red-400/40 mx-auto" />;
     if (val === "partial") return <Minus className="w-3.5 h-3.5 text-amber-400 mx-auto" />;
-    return <span className="text-[clamp(9px,0.9vw,12px)] text-white/50">{val}</span>;
+    return <span className="text-[clamp(9px,0.9vw,12px)] text-gray-500">{val}</span>;
   };
 
   return (
@@ -740,18 +740,18 @@ function SlideCompetitor({}: SlideProps) {
       <GlowCard className="overflow-hidden !p-0">
         <table className="w-full text-[clamp(9px,1vw,13px)]">
           <thead>
-            <tr className="border-b border-white/10">
-              <th className="text-left p-2 md:p-3 text-white/35 font-medium">Kriter</th>
-              <th className="p-2 md:p-3 text-white/35">Midas</th>
-              <th className="p-2 md:p-3 text-white/35">Fintables</th>
-              <th className="p-2 md:p-3 text-white/35">Bloomberg</th>
+            <tr className="border-b border-gray-200">
+              <th className="text-left p-2 md:p-3 text-gray-400 font-medium">Kriter</th>
+              <th className="p-2 md:p-3 text-gray-400">Midas</th>
+              <th className="p-2 md:p-3 text-gray-400">Fintables</th>
+              <th className="p-2 md:p-3 text-gray-400">Bloomberg</th>
               <th className="p-2 md:p-3 text-emerald-400 font-bold">NEXIA</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={i} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                <td className="p-2 md:p-3 text-white/60 font-medium">{r.label}</td>
+              <tr key={i} className="border-b border-gray-100 hover:bg-black/[0.02] transition-colors">
+                <td className="p-2 md:p-3 text-gray-600 font-medium">{r.label}</td>
                 <td className="p-2 md:p-3 text-center">{renderCell(r.midas)}</td>
                 <td className="p-2 md:p-3 text-center">{renderCell(r.fintables)}</td>
                 <td className="p-2 md:p-3 text-center">{renderCell(r.bloomberg)}</td>
@@ -764,11 +764,11 @@ function SlideCompetitor({}: SlideProps) {
       <div className="mt-3 grid grid-cols-2 gap-3">
         <GlowCard glowColor="emerald" className="!py-2 !px-3">
           <p className="text-[clamp(8px,0.8vw,11px)] text-emerald-400 font-semibold mb-0.5">GÜÇLÜ YANLARIMIZ</p>
-          <p className="text-[clamp(8px,0.8vw,11px)] text-white/40">Derin analiz motoru, Türkçe NLP, manipülasyon koruması</p>
+          <p className="text-[clamp(8px,0.8vw,11px)] text-gray-500">Derin analiz motoru, Türkçe NLP, manipülasyon koruması</p>
         </GlowCard>
         <GlowCard glowColor="amber" className="!py-2 !px-3">
           <p className="text-[clamp(8px,0.8vw,11px)] text-amber-400 font-semibold mb-0.5">ZAYIF YANLARIMIZ</p>
-          <p className="text-[clamp(8px,0.8vw,11px)] text-white/40">Henüz mobil yok, kullanıcı tabanı sıfırdan, marka bilinirliği düşük</p>
+          <p className="text-[clamp(8px,0.8vw,11px)] text-gray-500">Henüz mobil yok, kullanıcı tabanı sıfırdan, marka bilinirliği düşük</p>
         </GlowCard>
       </div>
     </div>
@@ -794,11 +794,11 @@ function SlidePricing({}: SlideProps) {
             <h4 className="text-[clamp(12px,1.2vw,16px)] font-bold mb-1">{p.name}</h4>
             <div className="flex items-baseline gap-1 mb-3">
               <span className="text-[clamp(1.3rem,2.5vw,2rem)] font-extrabold">{p.price}</span>
-              <span className="text-[clamp(9px,0.8vw,12px)] text-white/30">{p.period}</span>
+              <span className="text-[clamp(9px,0.8vw,12px)] text-gray-400">{p.period}</span>
             </div>
             <ul className="space-y-1.5">
               {p.features.map((f, j) => (
-                <li key={j} className="text-[clamp(8px,0.9vw,12px)] text-white/50 flex items-start gap-1.5">
+                <li key={j} className="text-[clamp(8px,0.9vw,12px)] text-gray-500 flex items-start gap-1.5">
                   <Check className="w-3 h-3 text-emerald-400 mt-0.5 shrink-0" />{f}
                 </li>
               ))}
@@ -819,32 +819,32 @@ function SlideBusinessModel({}: SlideProps) {
         <GlowCard glowColor="emerald">
           <DollarSign className="w-[clamp(1.2rem,2vw,2rem)] h-[clamp(1.2rem,2vw,2rem)] text-emerald-400 mb-2" />
           <h4 className="font-bold text-[clamp(12px,1.2vw,15px)] mb-1">B2C Abonelik</h4>
-          <p className="text-[clamp(9px,1vw,13px)] text-white/40">Freemium → Pro (₺199) & Premium (₺499). Hedef: %8 dönüşüm.</p>
+          <p className="text-[clamp(9px,1vw,13px)] text-gray-500">Freemium → Pro (₺199) & Premium (₺499). Hedef: %8 dönüşüm.</p>
         </GlowCard>
         <GlowCard glowColor="blue">
           <Zap className="w-[clamp(1.2rem,2vw,2rem)] h-[clamp(1.2rem,2vw,2rem)] text-blue-400 mb-2" />
           <h4 className="font-bold text-[clamp(12px,1.2vw,15px)] mb-1">API Lisanslama</h4>
-          <p className="text-[clamp(9px,1vw,13px)] text-white/40">Fintech şirketlerine 90+ quant fonksiyon as-a-service.</p>
+          <p className="text-[clamp(9px,1vw,13px)] text-gray-500">Fintech şirketlerine 90+ quant fonksiyon as-a-service.</p>
         </GlowCard>
         <GlowCard glowColor="violet">
           <BarChart3 className="w-[clamp(1.2rem,2vw,2rem)] h-[clamp(1.2rem,2vw,2rem)] text-violet-400 mb-2" />
           <h4 className="font-bold text-[clamp(12px,1.2vw,15px)] mb-1">Veri Analitiği</h4>
-          <p className="text-[clamp(9px,1vw,13px)] text-white/40">Anonim piyasa sentiment verileri, kurumsal içerik lisansı.</p>
+          <p className="text-[clamp(9px,1vw,13px)] text-gray-500">Anonim piyasa sentiment verileri, kurumsal içerik lisansı.</p>
         </GlowCard>
       </div>
       <GlowCard glowColor="emerald" className="text-center">
         <div className="grid grid-cols-3 gap-4">
           <div>
             <div className="text-[clamp(1.2rem,2.5vw,2rem)] font-extrabold text-emerald-400">~320K₺</div>
-            <div className="text-[clamp(8px,0.8vw,11px)] text-white/30 mt-0.5">Aylık gelir hedefi (1K)</div>
+            <div className="text-[clamp(8px,0.8vw,11px)] text-gray-400 mt-0.5">Aylık gelir hedefi (1K)</div>
           </div>
           <div>
             <div className="text-[clamp(1.2rem,2.5vw,2rem)] font-extrabold text-teal-400">%85</div>
-            <div className="text-[clamp(8px,0.8vw,11px)] text-white/30 mt-0.5">Brüt marj</div>
+            <div className="text-[clamp(8px,0.8vw,11px)] text-gray-400 mt-0.5">Brüt marj</div>
           </div>
           <div>
             <div className="text-[clamp(1.2rem,2.5vw,2rem)] font-extrabold text-emerald-300">~24x</div>
-            <div className="text-[clamp(8px,0.8vw,11px)] text-white/30 mt-0.5">OPEX/Gelir oranı (Pro)</div>
+            <div className="text-[clamp(8px,0.8vw,11px)] text-gray-400 mt-0.5">OPEX/Gelir oranı (Pro)</div>
           </div>
         </div>
       </GlowCard>
@@ -869,16 +869,16 @@ function SlideCapexOpex({}: SlideProps) {
             { item: "Yasal & KVKK danışmanlık", cost: "$300", note: "SPK uyum, gizlilik politikası" },
             { item: "CI/CD & test altyapısı", cost: "$0", note: "GitHub Actions + pytest (açık kaynak)" },
           ].map((c, i) => (
-            <div key={i} className="flex items-center justify-between text-[clamp(10px,1.1vw,14px)] border-b border-white/5 py-2">
-              <span className="text-white/55">{c.item}</span>
+            <div key={i} className="flex items-center justify-between text-[clamp(10px,1.1vw,14px)] border-b border-gray-100 py-2">
+              <span className="text-gray-600">{c.item}</span>
               <div className="text-right shrink-0 ml-3">
                 <span className="font-bold text-amber-400">{c.cost}</span>
-                <span className="text-white/25 ml-2 text-[clamp(8px,0.8vw,11px)]">{c.note}</span>
+                <span className="text-gray-400 ml-2 text-[clamp(8px,0.8vw,11px)]">{c.note}</span>
               </div>
             </div>
           ))}
           <div className="mt-3 pt-3 border-t border-amber-500/20 flex justify-between items-center">
-            <span className="text-[clamp(11px,1.2vw,15px)] text-white/70 font-bold">Toplam CAPEX</span>
+            <span className="text-[clamp(11px,1.2vw,15px)] text-gray-700 font-bold">Toplam CAPEX</span>
             <span className="text-[clamp(1.2rem,2.2vw,1.8rem)] font-extrabold text-amber-400">~$1.330 + ₺18K</span>
           </div>
         </GlowCard>
@@ -893,16 +893,16 @@ function SlideCapexOpex({}: SlideProps) {
             { item: "3. parti API abonelikleri", cost: "$15/ay", note: "NewsAPI Pro + yedek kaynaklar" },
             { item: "E-posta & monitoring", cost: "$15/ay", note: "SMTP + uptime + hata takibi" },
           ].map((c, i) => (
-            <div key={i} className="flex items-center justify-between text-[clamp(10px,1.1vw,14px)] border-b border-white/5 py-2">
-              <span className="text-white/55">{c.item}</span>
+            <div key={i} className="flex items-center justify-between text-[clamp(10px,1.1vw,14px)] border-b border-gray-100 py-2">
+              <span className="text-gray-600">{c.item}</span>
               <div className="text-right shrink-0 ml-3">
                 <span className="font-bold text-emerald-400">{c.cost}</span>
-                <span className="text-white/25 ml-2 text-[clamp(8px,0.8vw,11px)]">{c.note}</span>
+                <span className="text-gray-400 ml-2 text-[clamp(8px,0.8vw,11px)]">{c.note}</span>
               </div>
             </div>
           ))}
           <div className="mt-3 pt-3 border-t border-emerald-500/20 flex justify-between items-center">
-            <span className="text-[clamp(11px,1.2vw,15px)] text-white/70 font-bold">Toplam OPEX</span>
+            <span className="text-[clamp(11px,1.2vw,15px)] text-gray-700 font-bold">Toplam OPEX</span>
             <span className="text-[clamp(1.2rem,2.2vw,1.8rem)] font-extrabold text-emerald-400">~$230/ay</span>
           </div>
         </GlowCard>
@@ -911,7 +911,7 @@ function SlideCapexOpex({}: SlideProps) {
       <GlowCard glowColor="teal" className="mt-3 text-center">
         <div className="text-[clamp(11px,1.2vw,15px)] font-bold text-teal-400">
           Kullanıcı başı OPEX: <span className="text-[clamp(1.5rem,3vw,2.5rem)] font-extrabold">$0.23</span>
-          <span className="text-white/30 text-[clamp(10px,1.1vw,14px)] ml-3">vs Bloomberg $2,000/ay</span>
+          <span className="text-gray-400 text-[clamp(10px,1.1vw,14px)] ml-3">vs Bloomberg $2,000/ay</span>
         </div>
       </GlowCard>
     </div>
@@ -938,11 +938,11 @@ function SlideUnitEconomics({}: SlideProps) {
             { users: "50K", revenue: "16M₺", opex: "~$5K", margin: "%99" },
             { users: "100K", revenue: "32M₺", opex: "~$9K", margin: "%99+" },
           ].map((p, i) => (
-            <div key={i} className="p-2 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] transition-all duration-300 hover:scale-105 cursor-default">
+            <div key={i} className="p-2 rounded-xl bg-black/[0.02] hover:bg-black/[0.04] transition-all duration-300 hover:scale-105 cursor-default">
               <div className="text-[clamp(1rem,2vw,1.5rem)] font-extrabold text-emerald-400">{p.users}</div>
-              <div className="text-[clamp(7px,0.7vw,10px)] text-white/25 mt-0.5">Kullanıcı</div>
-              <div className="text-[clamp(10px,1vw,13px)] font-semibold text-white/60 mt-1">{p.revenue}/ay</div>
-              <div className="text-[clamp(7px,0.7vw,10px)] text-white/25">OPEX: {p.opex}</div>
+              <div className="text-[clamp(7px,0.7vw,10px)] text-gray-400 mt-0.5">Kullanıcı</div>
+              <div className="text-[clamp(10px,1vw,13px)] font-semibold text-gray-600 mt-1">{p.revenue}/ay</div>
+              <div className="text-[clamp(7px,0.7vw,10px)] text-gray-400">OPEX: {p.opex}</div>
               <div className="text-[clamp(8px,0.9vw,11px)] text-emerald-400 font-bold mt-0.5">Marj: {p.margin}</div>
             </div>
           ))}
@@ -1041,7 +1041,7 @@ function SlideGoToMarket({}: SlideProps) {
                 {/* Items */}
                 <ul className="space-y-2.5">
                   {p.items.map((item, j) => (
-                    <li key={j} className="text-[clamp(11px,1.1vw,15px)] text-white/50 flex items-start gap-2.5">
+                    <li key={j} className="text-[clamp(11px,1.1vw,15px)] text-gray-500 flex items-start gap-2.5">
                       <div className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 ${p.iconClass.replace("text-", "bg-")} opacity-60`} />
                       {item}
                     </li>
@@ -1079,15 +1079,15 @@ function SlideDemo({}: SlideProps) {
             }}
           >
             {/* Phone frame glow */}
-            <div className={`absolute -inset-3 bg-gradient-to-br ${i === 1 ? "from-emerald-500/20 to-teal-500/20" : "from-white/5 to-white/5"} rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
+            <div className={`absolute -inset-3 bg-gradient-to-br ${i === 1 ? "from-emerald-500/20 to-teal-500/20" : "from-gray-200/50 to-gray-200/50"} rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
 
             {/* Phone frame */}
-            <div className="relative bg-[#111] rounded-[2rem] p-[6px] shadow-2xl shadow-black/60 group-hover:shadow-emerald-500/20 transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2">
+            <div className="relative bg-gray-900 rounded-[2rem] p-[6px] shadow-2xl shadow-black/60 group-hover:shadow-emerald-500/20 transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2">
               {/* Notch */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-[1.8rem] bg-[#111] rounded-b-2xl z-20" />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-[1.8rem] bg-gray-900 rounded-b-2xl z-20" />
 
               {/* Screen */}
-              <div className="relative w-[clamp(180px,20vw,260px)] h-[clamp(360px,42vh,520px)] rounded-[1.7rem] overflow-hidden bg-[#09090b]">
+              <div className="relative w-[clamp(180px,20vw,260px)] h-[clamp(360px,42vh,520px)] rounded-[1.7rem] overflow-hidden bg-gray-50">
                 <Image
                   src={s.src}
                   alt={s.label}
@@ -1099,13 +1099,13 @@ function SlideDemo({}: SlideProps) {
               </div>
 
               {/* Home indicator */}
-              <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[35%] h-1 bg-white/20 rounded-full z-20" />
+              <div className="absolute bottom-[6px] left-1/2 -translate-x-1/2 w-[35%] h-1 bg-gray-200 rounded-full z-20" />
             </div>
 
             {/* Label below phone */}
             <div className="text-center mt-4">
-              <h4 className="font-bold text-[clamp(13px,1.3vw,17px)] text-white/90">{s.label}</h4>
-              <p className="text-[clamp(9px,1vw,13px)] text-white/35 mt-0.5">{s.desc}</p>
+              <h4 className="font-bold text-[clamp(13px,1.3vw,17px)] text-gray-900">{s.label}</h4>
+              <p className="text-[clamp(9px,1vw,13px)] text-gray-400 mt-0.5">{s.desc}</p>
             </div>
           </div>
         ))}
@@ -1136,7 +1136,7 @@ function SlideFuture({}: SlideProps) {
               <Tag color={v.color}>{v.timeline}</Tag>
             </div>
             <h4 className="font-bold text-[clamp(11px,1.1vw,14px)] mb-0.5">{v.title}</h4>
-            <p className="text-[clamp(8px,0.9vw,12px)] text-white/40">{v.desc}</p>
+            <p className="text-[clamp(8px,0.9vw,12px)] text-gray-500">{v.desc}</p>
           </GlowCard>
         ))}
       </div>
@@ -1195,8 +1195,8 @@ function SlideGlobal({}: SlideProps) {
             <p className="text-[clamp(10px,1vw,14px)] text-emerald-400/60 font-semibold mb-3">{r.users}</p>
             <ul className="space-y-1.5">
               {r.details.map((d, j) => (
-                <li key={j} className="text-[clamp(9px,0.9vw,12px)] text-white/40 flex items-start gap-1.5">
-                  <ArrowRight className="w-3 h-3 mt-0.5 shrink-0 text-white/20" />{d}
+                <li key={j} className="text-[clamp(9px,0.9vw,12px)] text-gray-500 flex items-start gap-1.5">
+                  <ArrowRight className="w-3 h-3 mt-0.5 shrink-0 text-gray-300" />{d}
                 </li>
               ))}
             </ul>
@@ -1233,7 +1233,7 @@ function SlideExitStrategy({}: SlideProps) {
               "Hedef değerleme: 10-20x ARR",
               "Zaman çerçevesi: 3-4 yıl",
             ].map((item, j) => (
-              <li key={j} className="text-[clamp(10px,1.1vw,14px)] text-white/50 flex items-start gap-2">
+              <li key={j} className="text-[clamp(10px,1.1vw,14px)] text-gray-500 flex items-start gap-2">
                 <Check className="w-3.5 h-3.5 text-emerald-400 mt-0.5 shrink-0" />{item}
               </li>
             ))}
@@ -1259,7 +1259,7 @@ function SlideExitStrategy({}: SlideProps) {
               "Hedef: bölgesel pazar lideri konumu",
               "Zaman çerçevesi: 4-5 yıl",
             ].map((item, j) => (
-              <li key={j} className="text-[clamp(10px,1.1vw,14px)] text-white/50 flex items-start gap-2">
+              <li key={j} className="text-[clamp(10px,1.1vw,14px)] text-gray-500 flex items-start gap-2">
                 <Check className="w-3.5 h-3.5 text-blue-400 mt-0.5 shrink-0" />{item}
               </li>
             ))}
@@ -1285,7 +1285,7 @@ function SlideExitStrategy({}: SlideProps) {
               "Temettü bazlı getiri modeli",
               "Zaman çerçevesi: süresiz",
             ].map((item, j) => (
-              <li key={j} className="text-[clamp(10px,1.1vw,14px)] text-white/50 flex items-start gap-2">
+              <li key={j} className="text-[clamp(10px,1.1vw,14px)] text-gray-500 flex items-start gap-2">
                 <Check className="w-3.5 h-3.5 text-amber-400 mt-0.5 shrink-0" />{item}
               </li>
             ))}
@@ -1330,7 +1330,7 @@ function SlideTeam({}: SlideProps) {
           <GlowCard key={i} glowColor={["emerald", "blue", "amber"][i]} className="text-center">
             <div className="relative mx-auto mb-3 group cursor-pointer">
               <div className={`absolute -inset-3 bg-gradient-to-r ${t.color} rounded-full blur-xl opacity-20 group-hover:opacity-50 transition-opacity duration-700`} />
-              <div className={`relative w-[clamp(4rem,8vw,5.5rem)] h-[clamp(4rem,8vw,5.5rem)] rounded-full overflow-hidden border-2 border-white/10 group-hover:border-white/30 group-hover:scale-110 transition-all duration-500 shadow-xl mx-auto`}>
+              <div className={`relative w-[clamp(4rem,8vw,5.5rem)] h-[clamp(4rem,8vw,5.5rem)] rounded-full overflow-hidden border-2 border-gray-200 group-hover:border-emerald-400/40 group-hover:scale-110 transition-all duration-500 shadow-xl mx-auto`}>
                 <Image src={t.photo} alt={t.name} fill className="object-cover" />
               </div>
             </div>
@@ -1338,7 +1338,7 @@ function SlideTeam({}: SlideProps) {
             <p className={`text-[clamp(10px,1vw,13px)] font-semibold mb-3 bg-gradient-to-r ${t.color} bg-clip-text text-transparent`}>{t.role}</p>
             <ul className="space-y-1.5 text-left">
               {t.responsibilities.map((r, j) => (
-                <li key={j} className="text-[clamp(8px,0.9vw,11px)] text-white/45 flex items-start gap-1.5">
+                <li key={j} className="text-[clamp(8px,0.9vw,11px)] text-gray-500 flex items-start gap-1.5">
                   <Check className="w-3 h-3 text-emerald-400 mt-0.5 shrink-0" />{r}
                 </li>
               ))}
@@ -1366,7 +1366,7 @@ function SlideClosing({}: SlideProps) {
         <h2 className="text-[clamp(1.5rem,4vw,3.5rem)] font-extrabold tracking-tight leading-tight bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-300 bg-clip-text text-transparent">
           &ldquo;Finansal güvenlik bir lüks değil, temel haktır.&rdquo;
         </h2>
-        <p className="text-[clamp(0.9rem,2vw,1.4rem)] text-white/40">
+        <p className="text-[clamp(0.9rem,2vw,1.4rem)] text-gray-500">
           Nexia, bu hakkı 8.6 milyon insanın cebine taşıyor.
         </p>
       </div>
@@ -1379,19 +1379,19 @@ function SlideClosing({}: SlideProps) {
           { photo: "/baris.jpeg", name: "Barış" },
         ].map((m) => (
           <div key={m.name} className="flex flex-col items-center gap-1 group">
-            <div className="relative w-[clamp(3rem,5vw,4rem)] h-[clamp(3rem,5vw,4rem)] rounded-full overflow-hidden border-2 border-white/10 group-hover:border-emerald-400/40 transition-all duration-500 group-hover:scale-110">
+            <div className="relative w-[clamp(3rem,5vw,4rem)] h-[clamp(3rem,5vw,4rem)] rounded-full overflow-hidden border-2 border-gray-200 group-hover:border-emerald-400/40 transition-all duration-500 group-hover:scale-110">
               <Image src={m.photo} alt={m.name} fill className="object-cover" />
             </div>
-            <span className="text-[clamp(9px,1vw,12px)] text-white/30">{m.name}</span>
+            <span className="text-[clamp(9px,1vw,12px)] text-gray-400">{m.name}</span>
           </div>
         ))}
       </div>
 
-      <div className="text-[clamp(1.5rem,3.5vw,2.5rem)] font-bold text-white/80 mt-2">
+      <div className="text-[clamp(1.5rem,3.5vw,2.5rem)] font-bold text-gray-800 mt-2">
         Teşekkürler!
       </div>
 
-      <div className="flex items-center gap-4 text-[clamp(10px,1vw,13px)] text-white/25">
+      <div className="flex items-center gap-4 text-[clamp(10px,1vw,13px)] text-gray-400">
         <span>nexia.app</span>
         <span>|</span>
         <span>info@nexia.app</span>
