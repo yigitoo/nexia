@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { Eye, EyeOff } from "lucide-react";
 
 const DEMO_ACCOUNTS = [
+  { email: "gumusyigit101@gmail.com", pass: "templekiller", label: "Founder" },
   { email: "admin@nexia.app", pass: "admin123", label: "Admin" },
   { email: "analyst@nexia.app", pass: "analyst123", label: "Manager" },
   { email: "viewer@nexia.app", pass: "viewer123", label: "Viewer" },

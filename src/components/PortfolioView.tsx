@@ -246,11 +246,37 @@ export function PortfolioView() {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* Header */}
-      <div>
-        <h1 className="text-base font-semibold">Portfoy</h1>
-        <p className="text-[13px] text-muted-foreground mt-0.5">
-          Pozisyon takibi ve kar/zarar analizi
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-base font-semibold">Portföy</h1>
+          <p className="text-[13px] text-muted-foreground mt-0.5">
+            Pozisyon takibi ve kâr/zarar analizi
+          </p>
+        </div>
+        <button
+          onClick={async () => {
+            try {
+              const res = await fetch("http://localhost:8000/api/reports/pdf", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({}),
+              });
+              if (res.ok) {
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `nexia-portfoy-raporu-${new Date().toISOString().slice(0, 10)}.pdf`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }
+            } catch { /* backend offline */ }
+          }}
+          className="h-8 px-3 flex items-center gap-1.5 rounded-md bg-emerald-600 hover:bg-emerald-500 text-white text-[12px] font-medium transition-colors"
+        >
+          <Package className="w-3.5 h-3.5" />
+          PDF İndir
+        </button>
       </div>
 
       {/* Add Stock Section */}
