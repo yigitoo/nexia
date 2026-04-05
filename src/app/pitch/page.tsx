@@ -1482,27 +1482,38 @@ function SlideClosing({}: SlideProps) {
 // ─── 21: Video ───
 function SlideVideo({}: SlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
 
-  useEffect(() => {
+  function startVideo() {
     const v = videoRef.current;
     if (!v) return;
-    // Sesli autoplay dene, tarayıcı engellerse muted dene
-    v.play().catch(() => {
-      v.muted = true;
-      v.play();
-    });
-  }, []);
+    v.muted = false;
+    v.currentTime = 0;
+    v.play();
+    setPlaying(true);
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full gap-4">
       <div className="relative w-[clamp(70vw,80vw,1200px)] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-gray-200">
+        {!playing && (
+          <button
+            onClick={startVideo}
+            className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm cursor-pointer group transition-all hover:bg-black/50"
+          >
+            <div className="w-20 h-20 rounded-full bg-emerald-500 flex items-center justify-center shadow-2xl shadow-emerald-500/40 group-hover:scale-110 transition-transform duration-300">
+              <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </div>
+            <span className="text-white/80 text-sm mt-4 font-medium">Videoyu Oynat</span>
+          </button>
+        )}
         <video
           ref={videoRef}
           src="/Video.mp4"
-          autoPlay
           loop
           controls
           playsInline
+          preload="auto"
           className="w-full h-full object-contain bg-black"
         />
       </div>
