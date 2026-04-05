@@ -1488,7 +1488,7 @@ function SlideVideo({}: SlideProps) {
           src="/Video.mp4"
           autoPlay
           loop
-          muted
+          controls
           playsInline
           className="w-full h-full object-contain bg-black"
         />
