@@ -69,7 +69,8 @@ export default function PitchPage() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
-  const [slideKey, setSlideKey] = useState(0); // triggers re-animation
+  const [slideKey, setSlideKey] = useState(0);
+  const [isDark, setIsDark] = useState(true); // default dark
   const containerRef = useRef<HTMLDivElement>(null);
 
   const go = useCallback(
@@ -125,6 +126,11 @@ export default function PitchPage() {
           e.preventDefault();
           toggleFullscreen();
           break;
+        case "d":
+        case "D":
+          e.preventDefault();
+          setIsDark((v) => !v);
+          break;
         case "Escape":
           if (document.fullscreenElement) {
             document.exitFullscreen();
@@ -153,7 +159,7 @@ export default function PitchPage() {
   return (
     <div
       ref={containerRef}
-      className="relative h-screen w-screen overflow-hidden select-none bg-[#fafafa]"
+      className={`relative h-screen w-screen overflow-hidden select-none transition-colors duration-500 ${isDark ? "pitch-dark" : "pitch-light"}`}
       onMouseMove={handleMouseMove}
     >
       {/* Ambient multi-glow following mouse */}
@@ -251,13 +257,24 @@ export default function PitchPage() {
       </div>
 
       {/* Top bar */}
-      <div className="fixed top-[2vh] right-[2vw] z-50 flex items-center gap-3">
-        <span className="text-[10px] text-gray-300 font-mono">
+      <div className="fixed top-[2vh] right-[2vw] z-50 flex items-center gap-2">
+        <span className="text-[10px] pitch-muted font-mono">
           {String(current + 1).padStart(2, "0")}/{TOTAL_SLIDES}
         </span>
         <button
+          onClick={() => setIsDark((v) => !v)}
+          className="p-1.5 rounded-lg pitch-card-bg pitch-border hover:opacity-80 transition-all hover:scale-110"
+          title="Tema değiştir (D)"
+        >
+          {isDark ? (
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          ) : (
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+          )}
+        </button>
+        <button
           onClick={toggleFullscreen}
-          className="p-1.5 rounded-lg bg-black/[0.03] border border-black/[0.08] hover:bg-gray-100 transition-all hover:scale-110"
+          className="p-1.5 rounded-lg pitch-card-bg pitch-border hover:opacity-80 transition-all hover:scale-110"
           title="Tam ekran (F)"
         >
           {isFullscreen ? <Minimize className="w-3.5 h-3.5" /> : <Maximize className="w-3.5 h-3.5" />}
@@ -286,11 +303,63 @@ export default function PitchPage() {
           <span>tam ekran</span>
           <span className="px-1.5 py-0.5 rounded border border-gray-200 ml-1">N</span>
           <span>notlar</span>
+          <span className="px-1.5 py-0.5 rounded border border-gray-200 ml-1">D</span>
+          <span>tema</span>
         </div>
       </div>
 
-      {/* CSS animations */}
+      {/* CSS animations + theme */}
       <style jsx global>{`
+        /* ═══ DARK THEME (default) ═══ */
+        .pitch-dark {
+          background: #09090b;
+          color: #fafafa;
+        }
+        .pitch-dark .pitch-card-bg { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+        .pitch-dark .pitch-border { border-color: rgba(255,255,255,0.06); }
+        .pitch-dark .pitch-muted { color: rgba(255,255,255,0.3); }
+
+        /* ═══ LIGHT THEME ═══ */
+        .pitch-light {
+          background: #fafafa;
+          color: #1a1a2e;
+        }
+        .pitch-light .pitch-card-bg { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.08); }
+        .pitch-light .pitch-border { border-color: rgba(0,0,0,0.08); }
+        .pitch-light .pitch-muted { color: rgba(0,0,0,0.35); }
+
+        /* Light theme overrides for tailwind classes */
+        .pitch-light .text-gray-300 { color: #9ca3af; }
+        .pitch-light .text-gray-400 { color: #6b7280; }
+        .pitch-light .text-gray-500 { color: #4b5563; }
+        .pitch-light .text-gray-600 { color: #374151; }
+        .pitch-light .text-gray-700 { color: #1f2937; }
+        .pitch-light .text-gray-800 { color: #111827; }
+        .pitch-light .text-gray-900 { color: #030712; }
+        .pitch-light .border-gray-100 { border-color: #e5e7eb; }
+        .pitch-light .border-gray-200 { border-color: #d1d5db; }
+
+        /* Dark theme overrides — restore white-based text */
+        .pitch-dark .text-gray-300 { color: rgba(255,255,255,0.15); }
+        .pitch-dark .text-gray-400 { color: rgba(255,255,255,0.30); }
+        .pitch-dark .text-gray-500 { color: rgba(255,255,255,0.45); }
+        .pitch-dark .text-gray-600 { color: rgba(255,255,255,0.55); }
+        .pitch-dark .text-gray-700 { color: rgba(255,255,255,0.70); }
+        .pitch-dark .text-gray-800 { color: rgba(255,255,255,0.80); }
+        .pitch-dark .text-gray-900 { color: rgba(255,255,255,0.90); }
+        .pitch-dark .border-gray-100 { border-color: rgba(255,255,255,0.05); }
+        .pitch-dark .border-gray-200 { border-color: rgba(255,255,255,0.08); }
+        .pitch-dark .bg-gray-100 { background: rgba(255,255,255,0.05); }
+        .pitch-dark .bg-gray-200 { background: rgba(255,255,255,0.10); }
+        .pitch-dark .bg-gray-300 { background: rgba(255,255,255,0.15); }
+        .pitch-dark .bg-gray-400 { background: rgba(255,255,255,0.25); }
+        .pitch-dark .from-gray-900 { --tw-gradient-from: #fafafa; }
+        .pitch-dark .to-gray-600 { --tw-gradient-to: rgba(255,255,255,0.70); }
+
+        /* Dark notes panel */
+        .pitch-dark .bg-white\\/90 { background: rgba(0,0,0,0.85) !important; }
+        .pitch-dark .shadow-gray-300\\/50 { box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5) !important; }
+
         @keyframes float {
           0%, 100% { transform: translateY(0px) scale(1); opacity: 0.2; }
           50% { transform: translateY(-30px) scale(1.5); opacity: 0.5; }
