@@ -1486,12 +1486,10 @@ function SlideVideo({}: SlideProps) {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    v.muted = true;
-    v.play().then(() => {
-      // Autoplay başladı, şimdi sesi aç
-      v.muted = false;
-    }).catch(() => {
-      // Tarayıcı engelledi, muted kalsın
+    // Sesli autoplay dene, tarayıcı engellerse muted dene
+    v.play().catch(() => {
+      v.muted = true;
+      v.play();
     });
   }, []);
 
@@ -1502,7 +1500,6 @@ function SlideVideo({}: SlideProps) {
           ref={videoRef}
           src="/Video.mp4"
           autoPlay
-          muted
           loop
           controls
           playsInline
