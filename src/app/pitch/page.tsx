@@ -1481,12 +1481,28 @@ function SlideClosing({}: SlideProps) {
 
 // ─── 21: Video ───
 function SlideVideo({}: SlideProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.play().then(() => {
+      // Autoplay başladı, şimdi sesi aç
+      v.muted = false;
+    }).catch(() => {
+      // Tarayıcı engelledi, muted kalsın
+    });
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center w-full h-full gap-4">
       <div className="relative w-[clamp(70vw,80vw,1200px)] max-h-[75vh] rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-gray-200">
         <video
+          ref={videoRef}
           src="/Video.mp4"
           autoPlay
+          muted
           loop
           controls
           playsInline
